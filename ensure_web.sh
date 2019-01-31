@@ -2,9 +2,8 @@
 
 ## prolog
 set -o errexit
-__filename=${BASH_SOURCE[0]}
-__dirname=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-# __root=$(cd "${__dirname}/../" && pwd)
+__filename="${BASH_SOURCE[0]}"
+__dirname=$(cd "$(dirname "${__filename}")" && pwd)
 __root=${__dirname}
 if [[ -f "${__root}/.env" ]]; then source "${__root}/.env"; fi
 source "${__dirname}/util/helpers.sh"
@@ -13,7 +12,7 @@ export -f ensure_group  # from rm_helpers.sh, make available to children
 
 az account set --subscription $SUBSCRIPTION_NAME
 
-group_id=$(ensure_group $GROUP_NAME $PLAN_LOCATION)
+group_id=$(ensure_group $GROUP_NAME $GROUP_LOCATION)
 echo "ensured group [${group_id}]"
 
 ### ensure appservice plan
@@ -55,10 +54,10 @@ az webapp log config \
 echo "enabled logging for web [${web_id}]"
 
 ### switch to Oryx builder
-az webapp config appsettings set \
-  --ids $web_id \
-  --settings "ENABLE_ORYX_BUILD=true" 1> /dev/null
-echo "switched to Oryx build"
+# az webapp config appsettings set \
+#   --ids $web_id \
+#   --settings "ENABLE_ORYX_BUILD=true" 1> /dev/null
+# echo "switched to Oryx build"
 
 ### connect to git repo
 if [[ "$CONNECT_REPO" == "true" ]]; then
