@@ -12,7 +12,7 @@ export -f ensure_group  # from rm_helpers.sh, make available to children
 
 ### $WEB_ENV_VARS should be an indexed array variable
 #   each item in the array should be a `key=value` pair
-declare -a env_vars=${WEB_ENV_VARS}
+declare -a env_vars="${WEB_ENV_VARS[@]}"
 
 az account set --subscription $SUBSCRIPTION_NAME
 
@@ -59,10 +59,13 @@ echo "enabled logging for web [${web_id}]"
 
 ### set environment variables
 if [[ -n "${env_vars[@]}" ]]; then
-  >&2 echo "setting env vars in cloud"
+  >&2 echo "setting env vars in cloud:"
+  for var in $(echo "${env_vars[@]}"); do
+    >&2 echo "  ${var}"
+  done
   az webapp config appsettings set \
       --id ${web_id} \
-      --settings $env_vars
+      --settings ${env_vars[@]}
 fi
 
 ### switch to Oryx builder
