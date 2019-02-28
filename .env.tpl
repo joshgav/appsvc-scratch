@@ -9,6 +9,7 @@ PLAN_SKU=S1
 
 WEB_NAME=
 WEB_RUNTIME='NODE|10.10'
+STARTUP_SCRIPT_PATH='scripts/startup.sh'
 # WEB_ENV_VARS is an indexed array variable
 # each item in the array should be a `key=value` string 
 declare -a WEB_ENV_VARS=(

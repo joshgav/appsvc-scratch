@@ -36,6 +36,10 @@ fi
 echo "ensured plan [${plan_id}]"
 
 ### ensure web
+startup_arg=
+if [[ -n "${STARTUP_SCRIPT_PATH}" ]]; then
+  startup_arg="--startup-file ${STARTUP_SCRIPT_PATH}"
+fi
 web_id=$(az webapp show \
   --name $WEB_NAME \
   --resource-group $GROUP_NAME \
@@ -46,6 +50,7 @@ if [[ -z $web_id ]]; then
             --resource-group $GROUP_NAME \
             --plan $plan_id \
             --runtime $WEB_RUNTIME \
+            ${startup_arg} \
             --query id --output tsv)
 fi
 echo "ensured web [${web_id}]"
