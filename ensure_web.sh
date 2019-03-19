@@ -5,9 +5,10 @@ set -o errexit
 __filename="${BASH_SOURCE[0]}"
 __dirname=$(cd "$(dirname "${__filename}")" && pwd)
 __root=${__dirname}
+set -o allexport
 if [[ -f "${__root}/.env" ]]; then source "${__root}/.env"; fi
 source "${__dirname}/util/helpers.sh"
-export -f ensure_group  # from rm_helpers.sh, make available to children
+set +o allexport
 ## end prolog
 
 ### $WEB_ENV_VARS should be an indexed array variable
@@ -72,6 +73,12 @@ if [[ -n "${env_vars[@]}" ]]; then
       --id ${web_id} \
       --settings ${env_vars[@]}
 fi
+
+if [[ -n "${STORAGE_MOUNT_PATH}" ]]; then
+  >&2 echo "created mounted blob storage at ${STORAGE_MOUNT_PATH}"
+  ${__dirname}/byos.sh
+fi
+>&2 echo "created and mounted blob storage"
 
 ### switch to Oryx builder
 # az webapp config appsettings set \
